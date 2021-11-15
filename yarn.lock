@@ -5325,6 +5325,11 @@ gzip-size@5.1.1:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+halfmoon@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/halfmoon/-/halfmoon-1.1.1.tgz#af45c2d78bb869a408a5b72bbac2dccbe89d2aed"
+  integrity sha512-w/ydT3CixxxxdJP4a3sqSzUnCJFmhvcqE2vQOIsWCfevpqanKlbGQNUwKJH0nKvo13M89eetM3R0gsTOfNLGHA==
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
@@ -8973,6 +8978,13 @@ react-app-polyfill@^2.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.7"
     whatwg-fetch "^3.4.1"
+
+react-bootstrap-icons@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-icons/-/react-bootstrap-icons-1.6.1.tgz#253e6bf637c983edfb82af0554454a22c5937731"
+  integrity sha512-0xoFKK0soRBx7F0+R8lHmNp7THqaCMnAKm2SfySeTTmyk2HOG6SMXuoqlEI8SPZu2ez4u3dHlrXoo5/2IGWCeA==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-dev-utils@^11.0.3:
   version "11.0.4"
