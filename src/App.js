@@ -3,6 +3,7 @@ import { HouseDoorFill, Linkedin, Github, Globe2, PhoneFill, At } from 'react-bo
 import { HexColorPicker } from "react-colorful"
 import halfmoon from 'halfmoon'
 import 'halfmoon/css/halfmoon.css'
+import './App.css'
 
 export default function App() {
 	const [ includePhoto, setIncludePhoto ] = useState(false)
@@ -80,13 +81,27 @@ export default function App() {
 			<div className="content-wrapper">
 			{/* Add your page's main content here */}
 				<div className="row h-full">
-					<div className="col-12 col-md-6 bg-dark">
+					<div className="col-12 col-md-5 bg-dark overflow-y-auto" style={{ height: "100vh" }}>
 						<div className="card">
-							<div className="input-group mb-20">
-								<div className="input-group-prepend">
-									<span className="input-group-text">Name</span>
+							<div className="form-row row-eq-spacing mb-20">
+								<div className="col-3">
+									<div className="dropdown">
+										<button className="btn btn-success" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+											Title Font Color
+										</button>
+										<div className="dropdown-menu dropdown-menu-center">
+										<HexColorPicker color={color} onChange={setColor} />
+										</div>
+									</div>
 								</div>
-								<input type="text" className="form-control" placeholder="Your Name" name="Name" value={name} onChange={(e) => setName(e.target.value)} />
+								<div className="col-9">
+									<div className="input-group">
+										<div className="input-group-prepend">
+											<span className="input-group-text">Name</span>
+										</div>
+										<input type="text" className="form-control" placeholder="Your Name" name="Name" value={name} onChange={(e) => setName(e.target.value)} />
+									</div>
+								</div>
 							</div>
 							<textarea value={address} className="form-control form-control-sm font-size-14 mb-20" onChange={(e) => setAddress(e.target.value)} placeholder="Address"></textarea>
 							<div className="form-row row-eq-spacing mb-20">
@@ -134,17 +149,7 @@ export default function App() {
 										<input type="tel" value={phone} className="form-control" onChange={(e) => setPhone(e.target.value)}/>
 									</div>
 								</div>
-								<div className="col-2">
-									<div className="dropdown">
-										<button className="btn" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
-											Titles Color
-										</button>
-										<div className="dropdown-menu dropdown-menu-center">
-										<HexColorPicker color={color} onChange={setColor} />
-										</div>
-									</div>
-								</div>
-								<div className="col-6">
+								<div className="col-8">
 									<div className="input-group">
 										<div className="custom-switch mt-5 mx-20">
 											<input type="checkbox" id="includePhoto" onChange={(e) => setIncludePhoto(e.target.checked)} />
@@ -192,49 +197,51 @@ export default function App() {
 							<button className="btn btn-primary d-inline-block">Add Miscellaneous Content</button>
 						</div>
 					</div>
-					<div className="col-12 col-md-6 bg-light p-20">
-						<div className="h-200 mb-20">
-							<div className="d-inline-block mt-20 float-left">
-								<div className="d-flex">
-									{photo ? <img src={photo} className="rounded-circle" width="100" height="100" alt="Profile" /> : null}
-									<h1 className="m-20">{name}</h1>
+					<div className="col-12 col-md-7 bg-light p-20 overflow-y-auto" style={{ height: "100vh" }}>
+						<div id="page" className="mx-auto">
+							<div className="h-200 mb-20">
+								<div className="d-inline-block mt-20 float-left">
+									<div className="d-flex">
+										{photo ? <img src={photo} className="rounded-circle" width="100" height="100" alt="Profile" /> : null}
+										<h1 className="m-20">{name}</h1>
+									</div>
+									<p style={{ color: color }} className="font-size-18">{address ? <span style={{ whiteSpace: "pre-wrap" }}><HouseDoorFill className="mr-5" /> {address}</span> : null}</p>
 								</div>
-								<p style={{ color: color }} className="font-size-16">{address ? <span style={{ whiteSpace: "pre-wrap" }}><HouseDoorFill className="mr-5" /> {address}</span> : null}</p>
+								<div className="d-inline-block float-right text-right">
+									<p style={{ color: color }} className="font-size-18">{email ? <span>{email} <At /></span> : null}</p>
+									<p style={{ color: color }} className="font-size-18">{linkedin ? <span>{linkedin} <Linkedin /></span> : null}</p>
+									<p style={{ color: color }} className="font-size-18">{github ? <span>{github} <Github /></span> : null}</p>
+									<p style={{ color: color }} className="font-size-18">{website ? <span>{website} <Globe2 /></span> : null} </p>
+									<p style={{ color: color }} className="font-size-18">{phone ? <span>{phone} <PhoneFill /></span> : null}</p>
+								</div>
 							</div>
-							<div className="d-inline-block float-right text-right">
-								<p style={{ color: color }} className="font-size-16">{email ? <span>{email} <At /></span> : null}</p>
-								<p style={{ color: color }} className="font-size-16">{linkedin ? <span>{linkedin} <Linkedin /></span> : null}</p>
-								<p style={{ color: color }} className="font-size-16">{github ? <span>{github} <Github /></span> : null}</p>
-								<p style={{ color: color }} className="font-size-16">{website ? <span>{website} <Globe2 /></span> : null} </p>
-								<p style={{ color: color }} className="font-size-16">{phone ? <span>{phone} <PhoneFill /></span> : null}</p>
+							<div className="mb-20">
+								{education.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Education</h3> : null}
+								<dl>
+									{education.map((edu, index) => <div className="mb-10" key={index}>
+										<dt className="font-size-22 font-weight-semi-bold">{edu.title}</dt>
+										<dd className="font-size-18">{edu.content}</dd>
+									</div>)}
+								</dl>
 							</div>
-						</div>
-						<div className="mb-20">
-							{education.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Education</h3> : null}
-							<dl>
-								{education.map((edu, index) => <div className="mb-10" key={index}>
-									<dt className="font-size-22 font-weight-semi-bold">{edu.title}</dt>
-									<dd className="font-size-16">{edu.content}</dd>
-								</div>)}
-							</dl>
-						</div>
-						<div className="mb-20">
-							{workExperience.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Work Experience</h3> : null}
-							<dl>
-								{workExperience.map((work, index) => <div className="mb-10" key={index}>
-									<dt className="font-size-22 font-weight-semi-bold">{work.title}</dt>
-									<dd className="font-size-16">{work.content}</dd>
-								</div>)}
-							</dl>
-						</div>
-						<div className="mb-20">
-							{certifications.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Certifications</h3> : null}
-							<dl>
-								{certifications.map((cert, index) => <div className="mb-10" key={index}>
-									<dt className="font-size-22 font-weight-semi-bold">{cert.title}</dt>
-									<dd className="font-size-16">{cert.content}</dd>
-								</div>)}
-							</dl>
+							<div className="mb-20">
+								{workExperience.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Work Experience</h3> : null}
+								<dl>
+									{workExperience.map((work, index) => <div className="mb-10" key={index}>
+										<dt className="font-size-22 font-weight-semi-bold">{work.title}</dt>
+										<dd className="font-size-18">{work.content}</dd>
+									</div>)}
+								</dl>
+							</div>
+							<div className="mb-20">
+								{certifications.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">Certifications</h3> : null}
+								<dl>
+									{certifications.map((cert, index) => <div className="mb-10" key={index}>
+										<dt className="font-size-22 font-weight-semi-bold">{cert.title}</dt>
+										<dd className="font-size-18">{cert.content}</dd>
+									</div>)}
+								</dl>
+							</div>
 						</div>
 					</div>
 				</div>
