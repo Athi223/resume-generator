@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { HouseDoorFill, Linkedin, Github, Globe2, PhoneFill, At } from 'react-bootstrap-icons'
 import { HexColorPicker } from "react-colorful"
 import halfmoon from 'halfmoon'
+import ReactToPdf from 'react-to-pdf'
+import { toPng } from 'html-to-image'
 import 'halfmoon/css/halfmoon.css'
-import './App.css'
 
 export default function App() {
+	const page = useRef()
 	const [ includePhoto, setIncludePhoto ] = useState(false)
 	const [ color, setColor ] = useState('#000000')
 	const [ photo, setPhoto ] = useState('')
@@ -19,6 +21,7 @@ export default function App() {
 	const [ education, setEducation ] = useState([])
 	const [ workExperience, setWorkExperience ] = useState([])
 	const [ certifications, setCertifications ] = useState([])
+	const [ misc, setMisc ] = useState([])
 	useEffect(() => {
 		halfmoon.onDOMContentLoaded()
 	}, [])
@@ -73,6 +76,47 @@ export default function App() {
 		}
 		setCertifications(_certifications)
 	}
+	const handleMisc = (e, index, flag) => {					// flag = true for category, false for content
+		let _misc = [ ...misc ]
+		switch(flag) {
+			case 1:
+				_misc[index].category = e.target.value
+				break
+			case 2:
+				_misc[index].info.push({ title: '', content: '' })
+				break
+			default:
+				_misc.splice(index, 1)
+		}
+		setMisc(_misc)
+	}
+	const handleInfo = (e, index, index2, flag) => {					// flag = true for title, false for content
+		let _misc = [ ...misc ]
+		switch(flag) {
+			case 1:
+				_misc[index].info[index2].title = e.target.value
+				break
+			case 2:
+				_misc[index].info[index2].content = e.target.value
+				break
+			default:
+				_misc[index].info.splice(index2, 1)
+		}
+		setMisc(_misc)
+	}
+	const generate = useCallback(() => {
+		if (page.current === null) return
+		toPng(page.current, { cacheBust: true, })
+			.then((dataUrl) => {
+			const link = document.createElement('a')
+			link.download = 'resume.png'
+			link.href = dataUrl
+			link.click()
+			})
+			.catch((err) => {
+			console.log(err)
+			})
+	}, [page])
 	return (
 		// Page wrapper start
 		<div className="page-wrapper">
@@ -86,7 +130,7 @@ export default function App() {
 							<div className="form-row row-eq-spacing mb-20">
 								<div className="col-3">
 									<div className="dropdown">
-										<button className="btn btn-success" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+										<button className="btn btn-secondary" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
 											Title Font Color
 										</button>
 										<div className="dropdown-menu dropdown-menu-center">
@@ -141,7 +185,7 @@ export default function App() {
 								</div>
 							</div>
 							<div className="form-row row-eq-spacing mb-20">
-								<div className="col-4">
+								<div className="col-6">
 									<div className="input-group">
 										<div className="input-group-prepend">
 											<span className="input-group-text">Phone</span>
@@ -149,15 +193,15 @@ export default function App() {
 										<input type="tel" value={phone} className="form-control" onChange={(e) => setPhone(e.target.value)}/>
 									</div>
 								</div>
-								<div className="col-8">
+								<div className="col-6">
 									<div className="input-group">
-										<div className="custom-switch mt-5 mx-20">
+										<div className="custom-switch mt-5 mr-10">
 											<input type="checkbox" id="includePhoto" onChange={(e) => setIncludePhoto(e.target.checked)} />
-											<label htmlFor="includePhoto">Include Photo?</label>
+											<label htmlFor="includePhoto">Add Photo?</label>
 										</div>
 										{includePhoto ? <div className="custom-file">
 											<input type="file" id="photo" onChange={handlePhoto} />
-											<label htmlFor="photo" className="m-0">Choose a photo</label>
+											<label htmlFor="photo" className="m-0">Choose Photo</label>
 										</div> : null}
 									</div>
 								</div>
@@ -169,7 +213,7 @@ export default function App() {
 								{education.map((edu, index) => <div key={index} className="input-group mb-20">
 									<input type="text" className="form-control" placeholder="Title" value={edu.title} onChange={(e) => handleEducation(e, index, 1)} />
 									<input type="text" className="form-control" placeholder="Content" value={edu.content} onChange={(e) => handleEducation(e, index, 2)} />
-									<button className="btn btn-danger" onClick={(e) => handleEducation(e, index, 0)}>Remove</button>
+									<button className="btn btn-secondary" onClick={(e) => handleEducation(e, index, 0)}>Remove</button>
 								</div>)}
 							</div>
 							<hr className="bg-dark-light" />
@@ -179,7 +223,7 @@ export default function App() {
 								{workExperience.map((work, index) => <div key={index} className="input-group mb-20">
 									<input type="text" className="form-control" placeholder="Title" value={work.title} onChange={(e) => handleWorkExperience(e, index, 1)} />
 									<input type="text" className="form-control" placeholder="Content" value={work.content} onChange={(e) => handleWorkExperience(e, index, 2)} />
-									<button className="btn btn-danger" onClick={(e) => handleWorkExperience(e, index, 0)}>Remove</button>
+									<button className="btn btn-secondary" onClick={(e) => handleWorkExperience(e, index, 0)}>Remove</button>
 								</div>)}
 							</div>
 							<hr className="bg-dark-light" />
@@ -189,16 +233,36 @@ export default function App() {
 								{certifications.map((cert, index) => <div key={index} className="input-group mb-20">
 									<input type="text" className="form-control" placeholder="Title" value={cert.title} onChange={(e) => handleCertifications(e, index, 1)} />
 									<input type="text" className="form-control" placeholder="Content" value={cert.content} onChange={(e) => handleCertifications(e, index, 2)} />
-									<button className="btn btn-danger" onClick={(e) => handleCertifications(e, index, 0)}>Remove</button>
+									<button className="btn btn-secondary" onClick={(e) => handleCertifications(e, index, 0)}>Remove</button>
 								</div>)}
 							</div>
 							<hr className="bg-dark-light" />
 							<h4 className="d-inline-block mr-20">Miscellaneous</h4>
-							<button className="btn btn-primary d-inline-block">Add Miscellaneous Content</button>
+							<button className="btn btn-primary d-inline-block" onClick={() => setMisc(prevstate => prevstate.concat({ category: '', info: [] }))}>Add Miscellaneous Content</button>
+							<div>
+								{misc.map((category, index) => <div key={index}>
+									<div className="input-group mt-15">
+										<input type="text" className="form-control" placeholder="Category" value={category.category} onChange={(e) => handleMisc(e, index, 1)} />
+										<button className="btn btn-success" onClick={(e) => handleMisc(e, index, 2)}>Add Info</button>
+										<button className="btn btn-danger" onClick={(e) => handleMisc(e, index, 0)}>Remove Category</button>
+									</div>
+									{category.info.map((info, index2) => <div key={index2} className="input-group mt-5">
+										<input type="text" className="form-control" placeholder="Title" value={info.title} onChange={(e) => handleInfo(e, index, index2, 1)} />
+										<input type="text" className="form-control" placeholder="Content" value={info.content} onChange={(e) => handleInfo(e, index, index2, 2)} />
+										<button className="btn btn-secondary" onClick={(e) => handleInfo(e, index, index2, 0)}>Remove</button>
+									</div>)}
+								</div>)}
+							</div>
+							<div className="text-center mt-20">
+							<ReactToPdf targetRef={page} filename="resume.pdf" options={{ orientation: 'p', unit: 'pt' }} x={0} y={0} scale={1}>
+								{({toPdf}) => <button className="btn btn-lg btn-success mr-5" onClick={toPdf}>Generate PDF</button>}
+							</ReactToPdf>
+							<button className="btn btn-lg btn-success ml-5" onClick={generate}>Generate PNG</button>
+							</div>
 						</div>
 					</div>
-					<div className="col-12 col-md-7 bg-light p-20 overflow-y-auto" style={{ height: "100vh" }}>
-						<div id="page" className="mx-auto">
+					<div className="col-12 col-md-7 bg-dark overflow-y-auto" style={{ height: "100vh" }}>
+						<div ref={page} className="mx-auto card bg-white" style={{ width: "21cm", height: "29.7cm"}}>
 							<div className="h-200 mb-20">
 								<div className="d-inline-block mt-20 float-left">
 									<div className="d-flex">
@@ -242,6 +306,15 @@ export default function App() {
 									</div>)}
 								</dl>
 							</div>
+							{misc.map((category, index) => <div key={index} className="mb-20">
+								{category.info.length > 0 ? <h3 style={{ color: color }} className="text-decoration-underline">{category.category}</h3> : null}
+								<dl>
+									{category.info.map((info, index2) => <div className="mb-10" key={index2}>
+										<dt className="font-size-22 font-weight-semi-bold">{info.title}</dt>
+										<dd className="font-size-18">{info.content}</dd>
+									</div>)}
+								</dl>
+							</div>)}
 						</div>
 					</div>
 				</div>
