@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Resume Generator
+
+Simple Resume Generator Made using React JS
+
+Live at [Resume Generator](https://Athi223.github.io/resume-generator)
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
