@@ -126,7 +126,7 @@ export default function App() {
 			{/* Add your page's main content here */}
 				<div className="row h-full">
 					<div className="col-12 col-md-5 bg-dark overflow-y-auto" style={{ height: "100vh" }}>
-						<div className="card">
+						<div className="card p-20">
 							<div className="form-row row-eq-spacing mb-20">
 								<div className="col-3">
 									<div className="dropdown">
@@ -253,11 +253,11 @@ export default function App() {
 									</div>)}
 								</div>)}
 							</div>
-							<div className="text-center mt-20">
+							<div className="text-center">
 							<ReactToPdf targetRef={page} filename="resume.pdf" options={{ orientation: 'p', unit: 'pt' }} x={0} y={0} scale={1}>
-								{({toPdf}) => <button className="btn btn-lg btn-success mr-5" onClick={toPdf}>Generate PDF</button>}
+								{({toPdf}) => <button className="btn btn-success mr-5" onClick={toPdf}>Generate PDF</button>}
 							</ReactToPdf>
-							<button className="btn btn-lg btn-success ml-5" onClick={generate}>Generate PNG</button>
+							<button className="btn btn-success ml-5" onClick={generate}>Generate PNG</button>
 							</div>
 						</div>
 					</div>
